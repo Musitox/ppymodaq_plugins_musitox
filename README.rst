@@ -12,7 +12,7 @@ pymodaq_plugins_template
    :alt: Documentation Status
 
 .. image:: https://github.com/PyMoDAQ/pymodaq_plugins_template/workflows/Upload%20Python%20Package/badge.svg
-   :target: https://github.com/PyMoDAQ/pymodaq_plugins_template
+   :target: https://github.com/Musitox/ppymodaq_plugins_musitox
    :alt: Publication Status
 
 .. image:: https://github.com/PyMoDAQ/pymodaq_plugins_template/actions/workflows/Test.yml/badge.svg
@@ -25,15 +25,15 @@ Use this template to create a repository on your account and start the developme
 Authors
 =======
 
-* First Author  (myemail@xxx.org)
-* Other author (myotheremail@xxx.org)
+* First Author  (pierre.piault@univ-grenoble-alpes.fr)
+
 
 .. if needed use this field
 
     Contributors
     ============
 
-    * First Contributor
+    * Pierre Piault
     * Other Contributors
 
 .. if needed use this field
