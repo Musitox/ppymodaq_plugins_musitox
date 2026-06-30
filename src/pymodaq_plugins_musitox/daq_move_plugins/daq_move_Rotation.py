@@ -19,8 +19,9 @@ from pymodaq_plugins_musitox.hardware.python_wrapper_file_of_your_instrument imp
 #     pymodaq_plugins_my_plugin/daq_move_plugins
 
 
-class DAQ_Move_Template(DAQ_Move_base):
+class DAQ_Move_Rotation(DAQ_Move_base):
     """ Instrument plugin class for an actuator.
+    in this case it should be the rotation for mock tomograph
     
     This object inherits all functionalities to communicate with PyMoDAQ’s DAQ_Move module through inheritance via
     DAQ_Move_base. It makes a bridge between the DAQ_Move module and the Python wrapper of a particular instrument.
@@ -42,8 +43,8 @@ class DAQ_Move_Template(DAQ_Move_base):
 
     """
     is_multiaxes = False  # TODO for your plugin set to True if this plugin is controlled for a multiaxis controller
-    _axis_names: Union[List[str], Dict[str, int]] = ['Axis1', 'Axis2']  # TODO for your plugin: complete the list
-    _controller_units: Union[str, List[str]] = 'mm'  # TODO for your plugin: put the correct unit here, it could be
+    _axis_names: Union[List[str], Dict[str, int]] = ['Rot']  # TODO for your plugin: complete the list
+    _controller_units: Union[str, List[str]] = 'deg'  # TODO for your plugin: put the correct unit here, it could be
     # TODO  a single str (the same one is applied to all axes) or a list of str (as much as the number of axes)
     _epsilon: Union[float, List[float]] = 0.1  # TODO replace this by a value that is correct depending on your controller
     # TODO it could be a single float of a list of float (as much as the number of axes)
@@ -51,6 +52,7 @@ class DAQ_Move_Template(DAQ_Move_base):
     # as  DataActuatorType.float  (or entirely remove the line)
 
     params = [   # TODO for your custom plugin: elements to be added here as dicts in order to control your custom stage
+                 {'title':'rotation_test', 'name':'musitox_rot', 'type':'float', 'value':0, 'min':0, 'readonly':False}
                 ] + comon_parameters_fun(is_multiaxes, axis_names=_axis_names, epsilon=_epsilon)
     # _epsilon is the initial default value for the epsilon parameter allowing pymodaq to know if the controller reached
     # the target value. It is the developer responsibility to put here a meaningful value
@@ -58,7 +60,7 @@ class DAQ_Move_Template(DAQ_Move_base):
     def ini_attributes(self):
         #  TODO declare the type of the wrapper (and assign it to self.controller) you're going to use for easy
         #  autocompletion
-        self.controller: PythonWrapperObjectOfYourInstrument = None
+        self.controller: Rotation_tomo = None
 
         #TODO declare here attributes you want/need to init with a default value
         pass
@@ -71,10 +73,9 @@ class DAQ_Move_Template(DAQ_Move_base):
         float: The position obtained after scaling conversion.
         """
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
-        pos = DataActuator(data=self.controller.your_method_to_get_the_actuator_value(),  # when writing your own plugin replace this line
+        #raise NotImplementedError  # when writing your own plugin remove this line
+        pos = DataActuator(data=self.controller.get_position(),  # when writing your own plugin replace this line
                            units=self.axis_unit)
-        pos = self.get_position_with_scaling(pos)
         return pos
 
     def user_condition_to_reach_target(self) -> bool:
