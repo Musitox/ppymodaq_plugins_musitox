@@ -71,9 +71,7 @@ class Rotation_tomo:
 
         self._init_value = self._position
         if self._init_value != self._target_pos:
-
-
-            self._alpha = math.fabs(math.log(self._espilon / math.fabs(self._init_value - self._target_lambda)))
+            self._alpha = math.fabs(math.log(self._espilon / math.fabs(self._init_value - self._target_pos)))
         else:
             self._alpha = math.fabs(math.log(self._espilon / 10))
         self._start_time = perf_counter()
