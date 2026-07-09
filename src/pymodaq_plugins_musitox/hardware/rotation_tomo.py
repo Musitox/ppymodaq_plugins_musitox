@@ -13,7 +13,7 @@ import math
 import numpy as np
 from time import perf_counter
 
-class Rotation_tomo:
+class Eotation_tomo:
     """Mock Controller of a tomographic rotation
     it should contain absolute, relative mouvment
     setting of 0deg or home position
@@ -26,7 +26,7 @@ class Rotation_tomo:
 
 
         self._epsilon = 0.01 #margin of position error
-        #self._tau = 2   #time to reach the position
+        self._tau = 2   #time to reach the position
         self._moving = False
         self._position = 10
 
@@ -41,6 +41,18 @@ class Rotation_tomo:
     def stop(self):
         #stop the motion
         self._moving = False
+
+    @property
+    def tau(self, value):
+        """
+        fetch the characteristic time to reach a particular wavelength
+        Returns
+        -------
+        float: the current characteristic decay time value
+
+        """
+        return self._tau
+
 
     @tau.setter
     def tau(self, value):

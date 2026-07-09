@@ -43,20 +43,19 @@ Authors
 
 Instruments
 ===========
-
-Below is the list of instruments included in this plugin
+Currently is a mock of a rotation and 2d detector geting Xray radiography for a simulated tomographic acquisition
 
 Actuators
 +++++++++
 
-* **yyy**: control of yyy actuators
-* **xxx**: control of xxx actuators
+* Rot : for getting theta position of the sample
+
 
 Viewer0D
 ++++++++
 
-* **yyy**: control of yyy 0D detector
-* **xxx**: control of xxx 0D detector
+* None
+*
 
 Viewer1D
 ++++++++
@@ -68,8 +67,8 @@ Viewer1D
 Viewer2D
 ++++++++
 
-* **yyy**: control of yyy 2D detector
-* **xxx**: control of xxx 2D detector
+* 2d detector : type Flat panle detector
+* migth add parameters as : frame rate, exposure time, average frame, binning ...
 
 
 PID Models
