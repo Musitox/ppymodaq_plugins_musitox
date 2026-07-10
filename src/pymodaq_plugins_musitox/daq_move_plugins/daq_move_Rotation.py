@@ -9,7 +9,7 @@ from pymodaq_gui.parameter import Parameter
 #  TODO:
 #  Replace the following fake import with the import of the real Python wrapper of your instrument. Here we suppose that
 #  the wrapper is in the hardware directory, but it could come from an external librairy like pylablib or pymeasure.
-from pymodaq_plugins_musitox.hardware.rotation_tomo import Eotation_tomo
+from pymodaq_plugins_musitox.hardware.rotation_tomo import Rotation_tomo
 
 # TODO:
 # (1) change the name of the following class to DAQ_Move_TheNameOfYourChoice
@@ -75,6 +75,7 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         #raise NotImplementedError  # when writing your own plugin remove this line
         pos = DataActuator(data=self.controller.get_position(),  # when writing your own plugin replace this line
                            units=self.axis_unit)
+        pos = self.get_position_with_scaling(pos)
         return pos
 
     def user_condition_to_reach_target(self) -> bool:
@@ -94,10 +95,10 @@ class DAQ_Move_Rotation(DAQ_Move_base):
     def close(self):
         """Terminate the communication protocol"""
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
+        #raise NotImplementedError  # when writing your own plugin remove this line
         if self.is_master:
-            #  self.controller.your_method_to_terminate_the_communication()  # when writing your own plugin replace this line
-            ...
+            self.controller.close_communication()  # when writing your own plugin replace this line
+
 
     def commit_settings(self, param: Parameter):
         """Apply the consequences of a change of value in the detector settings
@@ -133,17 +134,16 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         initialized: bool
             False if initialization failed otherwise True
         """
-        raise NotImplementedError  # TODO when writing your own plugin remove this line and modify the ones below
         if self.is_master:  # is needed when controller is master
-            self.controller = PythonWrapperObjectOfYourInstrument(arg1, arg2, ...) #  arguments for instantiation!)
-            initialized = self.controller.a_method_or_atttribute_to_check_if_init()  # todo
+            self.controller = Rotation_tomo() #  arguments for instantiation!)
+            initialized = self.controller.open_communication()  # todo
             # todo: enter here whatever is needed for your controller initialization and eventual
             #  opening of the communication channel
         else:
             self.controller = controller
             initialized = True
 
-        info = "Whatever info you want to log"
+        info = "mock rotation initialised"
         return info, initialized
 
     def move_abs(self, value: DataActuator):
@@ -158,9 +158,9 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         self.target_value = value
         value = self.set_position_with_scaling(value)  # apply scaling if the user specified one
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
-        self.controller.your_method_to_set_an_absolute_value(value.value(self.axis_unit))  # when writing your own plugin replace this line
-        self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
+        #raise NotImplementedError  # when writing your own plugin remove this line
+        self.controller.set_position(value, 'mrad')  # when writing your own plugin replace this line
+        self.emit_status(ThreadCommand('Update_Status', ['I changed abs value ']))
 
     def move_rel(self, value: DataActuator):
         """ Move the actuator to the relative target actuator value defined by value
@@ -174,8 +174,8 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         value = self.set_position_relative_with_scaling(value)
 
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
-        self.controller.your_method_to_set_a_relative_value(value.value(self.axis_unit))  # when writing your own plugin replace this line
+        #raise NotImplementedError  # when writing your own plugin remove this line
+        self.controller.set_position(value.value(self.axis_unit))  # when writing your own plugin replace this line
         self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
 
     def move_home(self):

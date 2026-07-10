@@ -13,7 +13,7 @@ import math
 import numpy as np
 from time import perf_counter
 
-class Eotation_tomo:
+class Rotation_tomo:
     """Mock Controller of a tomographic rotation
     it should contain absolute, relative mouvment
     setting of 0deg or home position
@@ -24,7 +24,8 @@ class Eotation_tomo:
     def __init__(self):
         super().__init__()
 
-
+        self._init_value = None
+        self._start_time = 0
         self._epsilon = 0.01 #margin of position error
         self._tau = 2   #time to reach the position
         self._moving = False
@@ -36,7 +37,7 @@ class Eotation_tomo:
 
     def close_communication(self):
         #disconnect the device
-        return False
+        return True
 
     def stop(self):
         #stop the motion
