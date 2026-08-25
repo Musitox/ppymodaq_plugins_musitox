@@ -31,6 +31,8 @@ class Rotation_tomo:
         self._moving = False
         self._position = 10
 
+        self._target_pos = self._position
+
     def open_communication(self):
         #connect the device
         return True
@@ -44,7 +46,7 @@ class Rotation_tomo:
         self._moving = False
 
     @property
-    def tau(self, value):
+    def tau(self):
         """
         fetch the characteristic time to reach a particular wavelength
         Returns
@@ -84,25 +86,25 @@ class Rotation_tomo:
 
         self._init_value = self._position
         if self._init_value != self._target_pos:
-            self._alpha = math.fabs(math.log(self._espilon / math.fabs(self._init_value - self._target_pos)))
+            self._alpha = math.fabs(math.log(self._epsilon / math.fabs(self._init_value - self._target_pos)))
         else:
-            self._alpha = math.fabs(math.log(self._espilon / 10))
+            self._alpha = math.fabs(math.log(self._epsilon / 10))
         self._start_time = perf_counter()
         self._moving = True
 
-        def get_position(self):
+    def get_position(self):
             """get the current position of the rotation actuator"""
             return self._position
 
-        @property
-        def data_position(self, ):
-            return self._pos0
+    @property
+    def data_position(self, ):
+        return self._pos0
 
 
-        @data_position.setter
-        def data_position(self, pos0):
-            """Defines the center wavelength of the spectrum peak to be measured"""
-            if pos0 < 0:
-                raise ValueError('current mock rotation cannot be negative')
-            self._pos0 = pos0
+    @data_position.setter
+    def data_position(self, pos0):
+        """Defines the center wavelength of the spectrum peak to be measured"""
+        if pos0 < 0:
+            raise ValueError('current mock rotation cannot be negative')
+        self._pos0 = pos0
             
