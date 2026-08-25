@@ -64,7 +64,7 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         #TODO declare here attributes you want/need to init with a default value
         pass
 
-    def get_actuator_value(self) -> DataActuator:
+    def get_actuator_value(self):
         """Get the current value from the hardware with scaling conversion.
 
         Returns
@@ -73,12 +73,11 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         """
         ## TODO for your custom plugin
         #raise NotImplementedError  # when writing your own plugin remove this line
-        pos = DataActuator(data=self.controller.get_position(),  # when writing your own plugin replace this line
-                           units=self.axis_unit)
+        pos = DataActuator(data=self.controller.get_position(), units=self.axis_unit)
         pos = self.get_position_with_scaling(pos)
         return pos
 
-    def user_condition_to_reach_target(self) -> bool:
+    def user_condition_to_reach_target(self):
         """ Implement a condition for exiting the polling mechanism and specifying that the
         target value has been reached
 
@@ -100,7 +99,7 @@ class DAQ_Move_Rotation(DAQ_Move_base):
             self.controller.close_communication()  # when writing your own plugin replace this line
 
 
-    def commit_settings(self, param: Parameter):
+    def commit_settings(self, param):
         """Apply the consequences of a change of value in the detector settings
 
         Parameters
@@ -182,16 +181,16 @@ class DAQ_Move_Rotation(DAQ_Move_base):
         """Call the reference method of the controller"""
 
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
-        self.controller.your_method_to_get_to_a_known_reference()  # when writing your own plugin replace this line
-        self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
+        #raise NotImplementedError  # when writing your own plugin remove this line
+        self.controller.return_to_zero()  # when writing your own plugin replace this line
+        self.emit_status(ThreadCommand('Update_Status', ['I moved to zero/home']))
 
     def stop_motion(self):
         """Stop the actuator and emits move_done signal"""
 
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
-        self.controller.your_method_to_stop_positioning()  # when writing your own plugin replace this line
+        #raise NotImplementedError  # when writing your own plugin remove this line
+        self.controller.stop()  # when writing your own plugin replace this line
         self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
 
 

@@ -29,7 +29,7 @@ class Rotation_tomo:
         self._epsilon = 0.01 #margin of position error
         self._tau = 2   #time to reach the position
         self._moving = False
-        self._position = 10
+        self._position = 1.2
 
         self._target_pos = self._position
 
@@ -93,8 +93,14 @@ class Rotation_tomo:
         self._moving = True
 
     def get_position(self):
-            """get the current position of the rotation actuator"""
-            return self._position
+        """get the current position of the rotation actuator"""
+        if self._moving:
+            curr_time = perf_counter()
+            self._position = \
+                math.exp(- self._alpha * (curr_time-self._start_time) / self._tau) *\
+                (self._init_value - self._target_pos) + self._target_pos
+
+        return self._position
 
     @property
     def data_position(self, ):
@@ -108,3 +114,6 @@ class Rotation_tomo:
             raise ValueError('current mock rotation cannot be negative')
         self._pos0 = pos0
             
+    def return_to_zero(self):
+        """Simulate to moving at zero"""
+        self.set_position(0)
