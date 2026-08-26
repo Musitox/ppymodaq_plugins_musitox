@@ -1,4 +1,7 @@
 import numpy as np
+from skimage.data import shepp_logan_phantom
+from skimage.transform import radon, rescale
+
 
 from pymodaq_utils.utils import ThreadCommand
 from pymodaq_data.data import DataToExport, Axis
@@ -20,7 +23,7 @@ from pymodaq_plugins_musitox.hardware.flatpanel import mock_flatpanel
 #     pymodaq_plugins_my_plugin/daq_viewer_plugins/plugins_2D
 
 
-class DAQ_2DViewer_Template(DAQ_Viewer_base):
+class DAQ_2DViewer_FlatPanel(DAQ_Viewer_base):
     """ Instrument plugin class for a 2D viewer.
     
     This object inherits all functionalities to communicate with PyMoDAQ’s DAQ_Viewer module through inheritance via

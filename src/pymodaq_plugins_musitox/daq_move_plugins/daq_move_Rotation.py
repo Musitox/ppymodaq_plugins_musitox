@@ -44,7 +44,7 @@ class DAQ_Move_Rotation(DAQ_Move_base):
     """
     is_multiaxes = False  # TODO for your plugin set to True if this plugin is controlled for a multiaxis controller
     _axis_names: Union[List[str], Dict[str, int]] = ['Rot']  # TODO for your plugin: complete the list
-    _controller_units: Union[str, List[str]] = 'rad'  # TODO for your plugin: put the correct unit here, it could be
+    _controller_units: Union[str, List[str]] = '°'  # TODO for your plugin: put the correct unit here, it could be
     # TODO  a single str (the same one is applied to all axes) or a list of str (as much as the number of axes)
     _epsilon: Union[float, List[float]] = 0.1  # TODO replace this by a value that is correct depending on your controller
     # TODO it could be a single float of a list of float (as much as the number of axes)
@@ -174,7 +174,7 @@ class DAQ_Move_Rotation(DAQ_Move_base):
 
         ## TODO for your custom plugin
         #raise NotImplementedError  # when writing your own plugin remove this line
-        self.controller.set_position(value.value(self.axis_unit))  # when writing your own plugin replace this line
+        self.controller.set_position(value.value(self.axis_unit), 'rel')  # when writing your own plugin replace this line
         self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
 
     def move_home(self):
