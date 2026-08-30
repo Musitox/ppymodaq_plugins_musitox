@@ -31,6 +31,8 @@ class Rotation_tomo:
         self._moving = False
         self._position = 1.2
 
+        #self._speed = 1
+
         self._target_pos = self._position
 
     def open_communication(self):
@@ -116,4 +118,4 @@ class Rotation_tomo:
             
     def return_to_zero(self):
         """Simulate to moving at zero"""
-        self.set_position(0)
+        self.set_position(0, 'abs')

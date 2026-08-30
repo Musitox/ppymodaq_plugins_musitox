@@ -44,14 +44,16 @@ class DAQ_Move_Rotation(DAQ_Move_base):
     """
     is_multiaxes = False  # TODO for your plugin set to True if this plugin is controlled for a multiaxis controller
     _axis_names: Union[List[str], Dict[str, int]] = ['Rot']  # TODO for your plugin: complete the list
-    _controller_units: Union[str, List[str]] = '°'  # TODO for your plugin: put the correct unit here, it could be
+    _controller_units: Union[str, List[str]] = ['°']  # TODO for your plugin: put the correct unit here, it could be
     # TODO  a single str (the same one is applied to all axes) or a list of str (as much as the number of axes)
     _epsilon: Union[float, List[float]] = 0.1  # TODO replace this by a value that is correct depending on your controller
+    #_tau: Union[float, List[float]] = 2.  # TODO replace this by a value that is correct depending on your controller
     # TODO it could be a single float of a list of float (as much as the number of axes)
     data_actuator_type = DataActuatorType.DataActuator  # wether you use the new data style for actuator otherwise set this
     # as  DataActuatorType.float  (or entirely remove the line)
 
     params = [ {'title':'rotation_test', 'name':'Zrot', 'type':'float', 'value':0, 'min':0, 'readonly':False},
+               {'title':'rotation_speed', 'name':'Zrotspeed', 'type':'float', 'value':2, 'min':0.1, 'readonly':False},
                 ] + comon_parameters_fun(is_multiaxes, axis_names=_axis_names, epsilon=_epsilon)
     # _epsilon is the initial default value for the epsilon parameter allowing pymodaq to know if the controller reached
     # the target value. It is the developer responsibility to put here a meaningful value
@@ -114,8 +116,8 @@ class DAQ_Move_Rotation(DAQ_Move_base):
             # if the motors connected to the controller are of different type (mm, µm, nm, , etc...)
             # see BrushlessDCMotor from the thorlabs plugin for an exemple
 
-        elif param.name() == "a_parameter_you've_added_in_self.params":
-           self.controller.your_method_to_apply_this_param_change()
+        elif param.name() == "Zrotspeed":
+           self.controller.tau = param.value()
         else:
             pass
 

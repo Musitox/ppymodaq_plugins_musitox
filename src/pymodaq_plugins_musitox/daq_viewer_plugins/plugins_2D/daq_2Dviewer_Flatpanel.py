@@ -89,7 +89,7 @@ class DAQ_2DViewer_FlatPanel(DAQ_Viewer_base):
         initialized: bool
             False if initialization failed otherwise True
         """
-        raise NotImplementedError  # TODO when writing your own plugin remove this line and modify the one below
+        #raise NotImplementedError  # TODO when writing your own plugin remove this line and modify the one below
         if self.is_master:
             self.controller = PythonWrapperObjectOfYourInstrument()  #instantiate you driver with whatever arguments are needed
             self.controller.open_communication() # call eventual methods
@@ -119,7 +119,7 @@ class DAQ_2DViewer_FlatPanel(DAQ_Viewer_base):
     def close(self):
         """Terminate the communication protocol"""
         ## TODO for your custom plugin
-        raise NotImplementedError  # when writing your own plugin remove this line
+        #raise NotImplementedError  # when writing your own plugin remove this line
         if self.is_master:
             #  self.controller.your_method_to_terminate_the_communication()  # when writing your own plugin replace this line
             ...
