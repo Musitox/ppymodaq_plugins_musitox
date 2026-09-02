@@ -5,66 +5,81 @@ Created the 26/08/2026
 @author: Pierre Piault
 """
 import numpy as np
+from skimage.data import shepp_logan_phantom
+from skimage.transform import radon, rescale
+
 import pymodaq_utils.math_utils as mutils
 
 
-class mock_flatpanel:
-    Nx = 256
-    Ny = 256
+class Mock_flatpanel:
+
+
+    Nx = 240
+    Ny = 240
     amp = 20
-    dx = 20
-    dy = 40
-    n = 1
-    is_drifting = False
-    drift_x = 0
-    drift_y = 0
-    drift = np.zeros(2)
-    std_x = 0
-    std_y = 0
+    #dx = 20
+    #dy = 40
+    #n = 1
+    expT = 10
     amp_noise = 4
-    fringes = False
-    axes = ['exp', 'Rot']
-    units = ['ms', '°']
+
+    theta = 0
+    axes = ['bin1', 'bin2', 'bin3']
+    units = ['pxls', 'pxls', 'pxls']
+
+    hardware_averaging = True
+    live_mode_available = True
 
     def __init__(self):
         super().__init__()
-        self._image: np.ndarray = None
-        self._current_value = dict(exp = 1., Rot=0.)
+        self._image = None
+        #self._current_value = dict(expT = 10, theta=0.)
         self.base_Mock_data()
-        self.refresh_drift()
+        self._axes = self.axes[0]
 
-    def refresh_drift(self):
-        #???? je ne sais pas ce que c'est
-        self.drift = np.zeros(2)
+    def open_communication(self):
+        # connect the device
+        return True
 
-    def get_value(self, axis: str):
-        ## doit etre le retour de valeur de la valeur existante dans axes = [...
+    def close_communication(self):
+        # disconnect the device
+        return True
+
+    def get_value(self, axis):
+        #get value from the device to the gui pymodaq
         return self._current_value[axis]
 
-    def set_value(self, axis: str = 'exp', value: float = 0.):
-        #set exposuer time
+    def set_value(self, axis, value):
+        #set the value from the gui pymodaq toward the device
         self._current_value[axis] = value
+        #then actualisation of the image
         self.base_Mock_data()
 
+
     def base_Mock_data(self):
-        self.x_axis = np.linspace(0, self.Nx, self.Nx, endpoint=False) - self.Nx / 2
-        self.y_axis = np.linspace(0, self.Ny, self.Ny, endpoint=False) - self.Ny / 2
+        # build the base of the image
+        #this should be adapted with the selected binning
+        self.x_axis = np.linspace(0, self.Nx, self.Nx, endpoint=False) - self.Nx/2
+        self.y_axis = np.linspace(0, self.Ny, self.Ny, endpoint=False) - self.Ny/2
+        # then it fill with a image
         self._image = self.make_Mock_data()
         return self._image
 
     def make_Mock_data(self):
-        if self.is_drifting:
-            self.drift[0] += self.drift_x + self.std_x * np.random.randn()
-            self.drift[1] += self.drift_y + self.std_y * np.random.randn()
-        data_mock = self.amp * (
-            mutils.gauss2D(self.x_axis, self._current_value['X'] - self.drift[0], self.dx,
-                           self.y_axis, self._current_value['Y'] - self.drift[1], self.dy,
-                           self.n,
-                           angle=self._current_value['Theta']))
-        if self.fringes:
-            for indy in range(data_mock.shape[0]):
-                data_mock[indy, :] = data_mock[indy, :] * np.sin((self.x_axis - self.drift[0]) / 4) ** 2
-        return data_mock
+        # make the mock image of tomography
+        # this should be adapted by the exposure time and binning
+        theta = self.theta
+        sample_slice = rescale(shepp_logan_phantom(), scale=0.6, mode='reflect', channel_axis=None)
+        radio = radon(sample_slice, theta=[theta])
+        radio = np.tile(radio,(1,self.Nx))
+        '''
+        sample = np.tile(sample_slice[:,:,np.newaxis], (1,1,self.Nx))
+        radio = np.zeros((self.Nx, self.Nx))
+        for i in range(sample.shape[2]):
+            radio[i,:] = radon(sample[:,:,i], theta=theta)
+        '''
+        return radio
 
     def get_data(self) -> np.ndarray:
-        return self.make_Mock_data() + self.amp_noise * np.random.rand(len(self.y_axis), len(self.x_axis))
+        # build a realistic image with random noise
+        return self.amp * self.expT * self.make_Mock_data() + self.amp_noise * np.random.rand(len(self.y_axis), len(self.x_axis))
