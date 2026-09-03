@@ -53,7 +53,7 @@ class DAQ_2DViewer_Flatpanel(DAQ_Viewer_base):
 
     params = comon_parameters + [
         {'title':'Exposure time (ms)', 'name':'expTime', 'type':'int', 'value':'100', 'default':100, 'min':0, 'max':1000, 'readonly':False},
-        {'title':'rotation (°)', 'name':'rot', 'type':'float', 'value':0,'default':0, 'min':0., 'max':180., 'readonly':False},
+        {'title':'Rotation (°)', 'name':'rot', 'type':'float', 'value':0,'default':0, 'min':0., 'max':180., 'readonly':False},
         #{'title':'Binning', 'name':'binning', 'type':'int', 'value':1, 'default':1, 'min':1, 'max':3}
         ## TODO for your custom plugin
         # elements to be added here as dicts in order to control your custom stage
@@ -83,10 +83,11 @@ class DAQ_2DViewer_Flatpanel(DAQ_Viewer_base):
             #this is the binning case
             self.controller.your_method_to_apply_this_param_change()
         elif param.name() == 'expTime':
-            self.controller.set_value('expTime', param.value())
+            #self.controller.set_value('expT', param.value())
+            self.controller.expT = param.value()
         elif param.name() == 'rot':
-            self.controller.set_value('rot', param.value())
-
+            #self.controller.Mock_flatpanel.set_value('theta', param.value())
+            self.controller.theta = param.value()
         else :
             pass
 
