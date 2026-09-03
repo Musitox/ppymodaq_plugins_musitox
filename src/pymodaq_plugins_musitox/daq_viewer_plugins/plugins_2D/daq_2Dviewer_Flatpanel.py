@@ -1,5 +1,6 @@
 import numpy as np
-
+from qtpy.QtCore import QThread, Slot, QRectF
+from qtpy import QtWidgets
 
 from typing import Union, List, Dict
 from pymodaq_utils.utils import ThreadCommand
@@ -114,8 +115,8 @@ class DAQ_2DViewer_Flatpanel(DAQ_Viewer_base):
             self.controller = Mock_flatpanel()
             initialized = True
 
-        self.x_axis = Axis(data=self.controller.Mock_flatpanel.x_axis, label='pixel', index=1)
-        self.y_axis = Axis(data=self.controller.Mock_flatpanel.y_axis, label='pixel', index=0)
+        self.x_axis = Axis(data=self.controller.x_axis, label='pixel', index=1)
+        self.y_axis = Axis(data=self.controller.y_axis, label='pixel', index=0)
 
         '''
         ## TODO for your custom plugin
@@ -155,6 +156,8 @@ class DAQ_2DViewer_Flatpanel(DAQ_Viewer_base):
             others optionals arguments
         """
         ## TODO for your custom plugin: you should choose EITHER the synchrone or the asynchrone version following
+        #self.x_axis = np.linspace(0, self.Nx, self.Nx, endpoint=False)
+        #self.y_axis = np.linspace(0, self.Ny, self.Ny, endpoint=False)
 
         if 'live' in kwargs:
             if kwargs['live']:
@@ -165,7 +168,8 @@ class DAQ_2DViewer_Flatpanel(DAQ_Viewer_base):
             while self.live:
                 #data = self.average_data(Naverage)  # hardware averaging
                 myradio = self.controller.get_data()
-                data = DataFromPlugins(name='myXradio', data=[myradio], axes=[self.x_axis, self.y_axis])
+                data = DataFromPlugins(name='myXradio', data=[myradio])
+                #data = DataFromPlugins(name='myXradio', data=[myradio], axes=[self.x_axis, self.y_axis])
                 QThread.msleep(kwargs.get('wait_time', 100))
                 self.dte_signal.emit(DataToExport('myXradio', data=[data]))
                 QtWidgets.QApplication.processEvents()
